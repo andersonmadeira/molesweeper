@@ -1,13 +1,19 @@
-table.board {
+#gwrapper {
+  position: absolute;
+  top:0; bottom: 0; left: 0; right: 0;
+  margin: auto;
+}
+
+table.game_board {
 	border-spacing: 0px; /* space between table elements */
 }
 
-table.board td {
+table.game_board td {
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#dadada), to(#f3f3f3));
   padding: 0px;
 }
 
-div.enabled {
+div.game_enabled {
 	display: table;
   background: #3b88d8;
   background: -moz-linear-gradient(0% 100% 90deg, #377ad0, #52a8e8);
@@ -23,7 +29,7 @@ div.enabled {
   text-align: center;
 }
 
-div.enabled:hover {
+div.game_enabled:hover {
   background: #2a81d7;
   background: -moz-linear-gradient(0% 100% 90deg, #206bcb, #3e9ee5);
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#3e9ee5), to(#206bcb));
@@ -37,7 +43,7 @@ div.enabled:hover {
   text-shadow: 0 -1px 1px #1d62ab;
 }
 
-div.disabled,div.disabled:hover {
+div.game_disabled,div.game_disabled:hover {
   background: #999;
   background: -moz-linear-gradient(0% 100% 90deg, #dadada, #f3f3f3);
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#dadada), to(#f3f3f3));
@@ -55,18 +61,18 @@ div.disabled,div.disabled:hover {
   height: 30px;
 }
 
-div.disabled {
+div.game_disabled {
 	opacity: 1;
   transition: opacity 0.5;
 }
 
-div.enabled span {
+div.game_enabled span {
 	display: table-cell; vertical-align: middle;
 	width: 100%;
 	height: 100%;
 }
 
-span.mine {
+span.game_mine {
   background: url('rc/3078-48x48x32.png');
 	opacity: 0.75;
   -webkit-background-size: 100% 100%;
@@ -75,7 +81,7 @@ span.mine {
   background-size: 100% 100%;
 }
 
-span.bmine {
+span.game_bmine {
 	background-image: url('rc/3080-48x48x32.png');	
   -webkit-background-size: 100% 100%;
   -moz-background-size: 100% 100%;
@@ -83,7 +89,7 @@ span.bmine {
   background-size: 100% 100%;
 }
 
-span.flag {
+span.game_flag {
   background-image: url('rc/3079-48x48x32.png');  
   -webkit-background-size: 100% 100%;
   -moz-background-size: 100% 100%;
@@ -100,15 +106,72 @@ span.flag {
   width: 32px;
 }
 
-div.face_good {
+#config {
+  display: table-cell;
+  background-image: url('rc/config.png'); 
+  -webkit-background-size: 100% 100%;
+  -moz-background-size: 100% 100%;
+  -o-background-size: 100% 100%;
+  background-size: 100% 100%;
+  height: 20px;
+  width: 20px;
+}
+
+div.game_face_good {
   background-image: url('rc/smile-happy.png');  
 }
 
-div.face_lost {
+div.game_face_lost {
   background-image: url('rc/smile-cry.png');  
 }
 
-div.face_won {
+div.game_face_won {
   background-image: url('rc/smile-glasses.png');  
 }
 
+.gfooter {
+  top: 0;
+}
+
+.gfooter .inner {
+  top: 0;
+  position:relative;
+}
+.gfooter .inner .right, .gfooter .inner .left{
+  /*width:50%; */
+  display: table-cell;
+  position:absolute;
+}
+.gfooter .inner .right{
+  right:0; 
+  text-align: right;
+}
+.gfooter .inner .left{
+  left:0;
+}
+
+#game_board {
+
+  padding-top: 33px;
+}
+
+.gtitle {
+  padding: 0;
+  padding-bottom: 15px;
+  margin: 0;
+  font-size: 30px;
+  font-family: Monospace;
+  font-style: italic;
+}
+
+.gheader {
+  text-align: center;
+}
+
+div.gflag {
+  font-size: 15px;
+  font-family: Monospace;
+  font-style: italic;
+  padding-bottom: -1px;
+  background-color: black;
+}

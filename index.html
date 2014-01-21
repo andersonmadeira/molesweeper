@@ -4,16 +4,54 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5/dat.gui.min.js"></script>
     <script src="mine.js"></script>
+    <!--<link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">-->
     <link rel="stylesheet" type="text/css" href="main.css">
   </head>
   <body>
-    <div id="content">
-      <div id="wrapper">
-        <div id='nav'>
-          <div id='face_status'></div> 
-          Flags: <span class='flags_count'>0</span>/<span class='total_mines'>3</span>
+    <div id='gwrapper'>
+      <div class='gheader'>
+        <h1 class='title'>Molesweeper</h1>
+      </div>
+      <div class='gfooter'>
+        <div class='inner'>
+          <div class="left"><div id='face_status'></div></div>
+          <div class="right gflag">Flags: <span class='flags_count'>0</span>/<span class='total_mines'>3</span></div>
+        </div>
+      </div>
+      <div id='game_board'>
+      </div>
+      <div class='gfooter'>
+        <div class='inner'>
+          <div class="left">first</div>
+          <div class="right" id='config'></div>
         </div>
       </div>
     </div>
+    <!-- <div id='wrapper' class="container centered" style='background-color: red;'>
+      <div id='game_nav' class="row" style='background-color: yellow;'>
+        <div class="col-md-1">
+          <div id='face_status'></div>
+        </div>
+        <div class="col-md-1">
+          Flags: <span class='flags_count'>0</span>/<span class='total_mines'>3</span>
+        </div>
+      </div>
+      <div class="row pagination-centered" style='background-color: green;'>
+        <div class="col-md-1" id='game_board'>
+
+        </div>
+      </div>
+      <div id='game_status' class="row" style='background-color: blue;'>
+        <div class="col-md-1">
+          <span id='game_timer' class="label label-primary">Info</span>
+        </div>
+        <div class="col-md-1">
+          <span class="glyphicon glyphicon-cog"></span>
+        </div>
+      </div>
+    </div>  -->
   </body>
 </html>
+
+
+

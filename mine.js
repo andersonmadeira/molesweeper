@@ -1,11 +1,10 @@
 Game = {
   // quantidade de linhas e colunas
   lins: 5,
-  cols: 5,
+  cols: 10,
   mine_count: 2,
   // quantidade de pontos não descobertos ainda
   hidden_count: 25,
-  fade_speed: 300,
   all_elem: [],
   revealed_elem: [],
   mines_elem: [],
@@ -13,27 +12,35 @@ Game = {
   over: false,
   // gui options
   gui: null,
+  control: null,
+  fade_speed: 300,
   // methods
   init: function (lins, cols) {
-    Game.gui = new dat.GUI();
+    /*Game.gui = new dat.GUI();
     Game.gui.add(Game, 'reset').name('New Game');
-    Game.gui.add(Game, 'lins').min(3).max(20).step(1).name('Lines');
-    Game.gui.add(Game, 'cols').min(3).max(20).step(1).name('Columns');
-    Game.gui.add(Game, 'fade_speed').min(100).max(1000).step(1).name('Fade Duration');
+    Game.control = Game.gui.add(Game, 'mine_count');
+    Game.control.name('Mines').min(1).max(Game.lins * Game.cols - 1).step(1);
+    Game.gui.add(Game, 'lins').min(3).max(20).step(1).name('Lines').onChange(function(value) {
+      Game.control.max(Game.lins * Game.cols - 1);
+    });
+    Game.gui.add(Game, 'cols').min(3).max(20).step(1).name('Columns').onChange(function(value) {
+      // Game.controllers.mines.max(Game.lins * Game.cols - 1);
+    });
+    Game.gui.add(Game, 'fade_speed').min(100).max(1000).step(1).name('Fade Duration');*/
     Game.reset();
   },
   reset: function () {
     Game.over = false;
-    Game.mine_count = 3 || Math.sqrt(Game.lins * Game.cols);
+    //Game.mine_count = 3 || Math.sqrt(Game.lins * Game.cols);
     Game.hidden_count = Game.lins * Game.cols;
     Game.all_elem = [];
-    $('.board').remove(); // remove a tabela do html
-    if ($('#face_status').hasClass('face_lost'))
-      $('#face_status').removeClass('face_lost');
-    else if($('#face_status').hasClass('face_won'))
-      $('#face_status').removeClass('face_won');
-    $('#face_status').addClass('face_good');
-    var tab = $('<table class="board"></table>'),
+    $('.game_board').remove(); // remove a tabela do html
+    if ($('#face_status').hasClass('game_face_lost'))
+      $('#face_status').removeClass('game_face_lost');
+    else if($('#face_status').hasClass('game_face_won'))
+      $('#face_status').removeClass('game_face_won');
+    $('#face_status').addClass('game_face_good');
+    var tab = $('<table class="game_board"></table>'),
         lin = null,
         col = null,
         elem = null, 
@@ -51,8 +58,8 @@ Game = {
       lin = $('<tr></tr>');
       tab.append(lin);
       for(var j = 0; j < Game.cols; j++) {
-        col = $('<td class="disabled"></td>');
-        elem = $('<div class="enabled" id="p'+i+'-'+j+'"><span class="label"></span></div>');
+        col = $('<td class="game_disabled"></td>');
+        elem = $('<div class="game_enabled" id="p'+i+'-'+j+'"><span class="game_label"></span></div>');
         // setta os dimensões
         elem.width(elem_width);
         elem.height(elem_height);
@@ -71,7 +78,16 @@ Game = {
         Game.all_elem.push(elem);
       }
     }
-    $('#wrapper').append(tab);
+    $('#game_board').append(tab);
+    $('#game_board').width(tab.width());
+    $('#game_board').height(tab.height());
+    $('#gwrapper').width(tab.width());
+    $('#gwrapper').height(tab.height());
+    console.log('Board width: ', $('#game_board').width());
+    console.log('tab width: ', tab.width());
+    console.log('Board height: ', $('#game_board').height());
+    $('#game_nav').width($('#game_board').width());
+    $('#game_status').width($('#game_board').width());
     // END - of generating the DOM elements
     // [DONE] MINAS - BEGIN [
     var elems_left = Game.all_elem.slice(),
@@ -129,7 +145,7 @@ Game = {
     //console.log('Blocks left:',Game.hidden_count);
     //console.log('Total Mines:',Game.mine_count);
     Game.clicked = $(this);
-        var clicked_type = 0;
+    var clicked_type = 0;
     // log data
     console.log(Game.clicked.data('lin'), Game.clicked.data('col'), ' clicked!');
     // SE ele clicou nela, mas se o jogo terminou ou ela tá desabilitada, então não faz nada.
@@ -149,7 +165,7 @@ Game = {
       Game.clicked.animate({opacity: 0.1}, Game.fade_speed, Game._on_dot_clicked);
     // se foi o botão direito do mouse e se não foi em cima de uma revelada ou de uma flag
     } else if (event.which == 3 && Game.clicked.data('revealed') == 0) { 
-      Game.clicked.find('span').toggleClass('flag');
+      Game.clicked.find('span').toggleClass('game_flag');
       if (Game.clicked.data('flag') == 1)
         Game.clicked.data('flag', 0)
       else
@@ -158,7 +174,7 @@ Game = {
     // --]]
   },
   _on_dot_clicked: function () {
-    Game.clicked.addClass('disabled');
+    Game.clicked.addClass('game_disabled');
     clicked_type = Game.clicked.data('type');
     // SE clicou numa mina mostra ela primeiro, depois as outras.
     if (clicked_type == -1) {
@@ -166,7 +182,7 @@ Game = {
       // marca como o fim do jogo.
       Game.over = true;
       // primeiro mostra a mina que o cara clicou e explodiu
-      Game.clicked.find('span').addClass('bmine');
+      Game.clicked.find('span').addClass('game_bmine');
       // salva a posição da que eu já mostrei.
       var lin2 = Game.clicked.data('lin'),
           col2 = Game.clicked.data('col');
@@ -181,9 +197,9 @@ Game = {
           if (Game.mines_elem[k].data('flag') == 1) {
             // --
             ///Game.mines_elem[k].data('flag', 0);
-            Game.mines_elem[k].find('span').removeClass('flag');
+            Game.mines_elem[k].find('span').removeClass('game_flag');
           }
-          Game.mines_elem[k].find('span').addClass('mine');
+          Game.mines_elem[k].find('span').addClass('game_mine');
           // não precisa marcar a mina como já revelada pro usuário não clicar nela denovo porque 
           // a var Game.over é settada como true, então não vai acontecer mais nada.
         }
@@ -191,8 +207,8 @@ Game = {
         ///Game.mines_elem[k].data('revealed', 1);
         Game.mines_elem.splice(k, 1);
       }
-      $('#face_status').removeClass('face_good');
-      $('#face_status').addClass('face_lost');
+      $('#face_status').removeClass('game_face_good');
+      $('#face_status').addClass('game_face_lost');
     // SE clicou num espaço em branço
     // vai ser assim, no sentido horário cada um vai enfileirando seus vizinhos, para serem verificados
     // se se ele tiver alguma mina ao seu redor, i.e. data('type') > 0, então não coloca vizinhos
@@ -220,7 +236,7 @@ Game = {
         // se era uma flag, tira ela
         if (pending[0].data('flag') == 1) {
           pending[0].data('flag', 0);
-          pending[0].find('span').removeClass('flag');
+          pending[0].find('span').removeClass('game_flag');
         }
         // marca esse que estou vendo como já revelado e revela ele para o jogador
         // line added
@@ -237,7 +253,7 @@ Game = {
               // se for válida e ainda não tiver sido revelada, revela e depois enfileira
               if (i2 >= 0 && i2 <= Game.lins-1 && j2 >= 0 && j2 <= Game.cols-1) {
                 str = '#p'+i2+'-'+j2;
-                console.log('+++:'+str);
+                //console.log('+++:'+str);
                 //console.log('->Checking neighbors of',str,':');
                 tmp = $(str);
                 if (tmp.data('revealed') == 0) {
@@ -260,13 +276,13 @@ Game = {
     Game.clicked.css({'opacity': 1});
   },
   _on_reveal_neighbors: function () {
-    $(this).addClass('disabled');
+    $(this).addClass('game_disabled');
     // quando terminar o efeito, olha se é um 'nada', ou seja, se não tem nenhuma mina ao redor desse
     // esse vai ser o comportamento do jogo, quando o jogador clicar em 'nada' tem que mostrar todos os
     // 'nadas' com as b22ordas sendo pontos com alguma mina ao redor. Melhor para entender é vendo... :/
     this_type = $(this).data('type');
     if (this_type == -1) {
-      $(this).find('span').addClass('mine');
+      $(this).find('span').addClass('game_mine');
     }
     else if (this_type != 0) {
       $(this).find('span').html(this_type);
@@ -288,9 +304,9 @@ Game = {
           // se era uma flag, tira ela
           if (Game.mines_elem[k].data('flag') == 1) {
             Game.mines_elem[k].data('flag', 0);
-            Game.mines_elem[k].find('span').removeClass('flag');
+            Game.mines_elem[k].find('span').removeClass('game_flag');
           }
-          Game.mines_elem[k].find('span').addClass('mine');
+          Game.mines_elem[k].find('span').addClass('game_mine');
           // não precisa marcar a mina como já revelada pro usuário não clicar nela denovo porque 
           // a var Game.over é settada como true, então não vai acontecer mais nada.
         }
@@ -298,8 +314,8 @@ Game = {
         Game.mines_elem.splice(k, 1);
       }
       Game.over = true;
-      $('#face_status').removeClass('face_good');
-      $('#face_status').addClass('face_won');
+      $('#face_status').removeClass('game_face_good');
+      $('#face_status').addClass('game_face_won');
     }
   }
 };
