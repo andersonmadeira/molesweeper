@@ -1,8 +1,8 @@
 Game = {
   // quantidade de linhas e colunas
-  lins: 5,
-  cols: 10,
-  mine_count: 2,
+  lins: 7,
+  cols: 20,
+  mine_count: 5,
   // quantidade de pontos não descobertos ainda
   hidden_count: 25,
   all_elem: [],
@@ -79,15 +79,9 @@ Game = {
       }
     }
     $('#game_board').append(tab);
-    $('#game_board').width(tab.width());
-    $('#game_board').height(tab.height());
     $('#gwrapper').width(tab.width());
     $('#gwrapper').height(tab.height());
-    console.log('Board width: ', $('#game_board').width());
-    console.log('tab width: ', tab.width());
-    console.log('Board height: ', $('#game_board').height());
-    $('#game_nav').width($('#game_board').width());
-    $('#game_status').width($('#game_board').width());
+    $('#total_mines').html(Game.mine_count);
     // END - of generating the DOM elements
     // [DONE] MINAS - BEGIN [
     var elems_left = Game.all_elem.slice(),
@@ -165,11 +159,20 @@ Game = {
       Game.clicked.animate({opacity: 0.1}, Game.fade_speed, Game._on_dot_clicked);
     // se foi o botão direito do mouse e se não foi em cima de uma revelada ou de uma flag
     } else if (event.which == 3 && Game.clicked.data('revealed') == 0) { 
+      var number = 0;
       Game.clicked.find('span').toggleClass('game_flag');
-      if (Game.clicked.data('flag') == 1)
-        Game.clicked.data('flag', 0)
-      else
+      if (Game.clicked.data('flag') == 1) {
+        number = parseInt($('#flag_count').html()) - 1;
+        Game.clicked.data('flag', 0);
+        if (number <= Game.mine_count && $('#gflag_label').hasClass('gwrong_flag_count'))
+          $('#gflag_label').removeClass('gwrong_flag_count');
+      } else {
+        number = parseInt($('#flag_count').html()) + 1;
         Game.clicked.data('flag', 1);
+        if (number > Game.mine_count)
+          $('#gflag_label').addClass('gwrong_flag_count');
+      }
+      $('#flag_count').html(number);
     }
     // --]]
   },

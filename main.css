@@ -172,6 +172,10 @@ div.gflag {
   font-size: 15px;
   font-family: Monospace;
   font-style: italic;
-  padding-bottom: -1px;
-  background-color: black;
+  bottom: -30;
+/*  background-color: black;*/
+}
+
+.gwrong_flag_count {
+  color: red;
 }
