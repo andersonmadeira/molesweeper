@@ -314,6 +314,12 @@ Game = {
           if (Game.mines_elem[k].data('flag') == 1) {
             Game.mines_elem[k].data('flag', 0);
             Game.mines_elem[k].find('span').removeClass('game_flag');
+            // atualiza o contador de flags
+            var number = 0;
+            number = parseInt($('#flag_count').html()) - 1;
+            $('#flag_count').html(number);
+            if (number <= Game.mine_count && $('#gflag_label').hasClass('gwrong_flag_count'))
+              $('#gflag_label').removeClass('gwrong_flag_count');
           }
           Game.mines_elem[k].find('span').addClass('game_mine');
           // não precisa marcar a mina como já revelada pro usuário não clicar nela denovo porque 
