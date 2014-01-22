@@ -35,6 +35,7 @@ Game = {
     Game.hidden_count = Game.lins * Game.cols;
     Game.all_elem = [];
     $('.game_board').remove(); // remove a tabela do html
+    // coloca a carinha de início de jogo
     if ($('#face_status').hasClass('game_face_lost'))
       $('#face_status').removeClass('game_face_lost');
     else if($('#face_status').hasClass('game_face_won'))
@@ -147,6 +148,7 @@ Game = {
       console.log('Nothing to do!');
       return;
     }
+    // BOTÃO ESQUERDO
     // se foi o botão esquerdo do mouse e não foi clicado numa flag
     if (event.which == 1 && Game.clicked.data('flag') == 0) {
       // [[--
@@ -157,6 +159,7 @@ Game = {
       if (Game.clicked.data('type') > 0)
         Game.clicked.find('span').html(Game.clicked.data('type'));
       Game.clicked.animate({opacity: 0.1}, Game.fade_speed, Game._on_dot_clicked);
+    // BOTÃO DIREITO 
     // se foi o botão direito do mouse e se não foi em cima de uma revelada ou de uma flag
     } else if (event.which == 3 && Game.clicked.data('revealed') == 0) { 
       var number = 0;
@@ -179,9 +182,8 @@ Game = {
   _on_dot_clicked: function () {
     Game.clicked.addClass('game_disabled');
     clicked_type = Game.clicked.data('type');
-    // SE clicou numa mina mostra ela primeiro, depois as outras.
+    // GAME OVER. Clicou numa mina, mostra todas.
     if (clicked_type == -1) {
-      console.log('BOOOM!!!');
       // marca como o fim do jogo.
       Game.over = true;
       // primeiro mostra a mina que o cara clicou e explodiu
@@ -206,7 +208,6 @@ Game = {
             $('#flag_count').html(number);
             if (number <= Game.mine_count && $('#gflag_label').hasClass('gwrong_flag_count'))
               $('#gflag_label').removeClass('gwrong_flag_count');
-
           }
           Game.mines_elem[k].find('span').addClass('game_mine');
           // não precisa marcar a mina como já revelada pro usuário não clicar nela denovo porque 
@@ -234,7 +235,8 @@ Game = {
           this_type = 0,
           this_elem = null,
           // @alpha-TESTE1: somente um teste com o efeito de mostrar os vizinhos
-          timer_seed = 100;
+          timer_seed = 100, 
+          i = 0, j = 0, number;
       // marca esse como revelado
       pending[0].data('revealed', 1);
       // O algorítmo funciona assim, 
@@ -243,9 +245,15 @@ Game = {
         i = pending[0].data('lin');
         j = pending[0].data('col');
         // se era uma flag, tira ela
+        // colocado aqui fora, em vez de em [1] pra ser mais eficiente.
         if (pending[0].data('flag') == 1) {
           pending[0].data('flag', 0);
           pending[0].find('span').removeClass('game_flag');
+          // corrige o contador de flags
+          number = parseInt($('#flag_count').html()) - 1;
+          $('#flag_count').html(number);
+          if (number <= Game.mine_count && $('#gflag_label').hasClass('gwrong_flag_count'))
+            $('#gflag_label').removeClass('gwrong_flag_count');
         }
         // marca esse que estou vendo como já revelado e revela ele para o jogador
         // line added
@@ -268,7 +276,7 @@ Game = {
                 if (tmp.data('revealed') == 0) {
                   // [[-- BEGIN revela!
                   //alert('Unrevealed neighbor of '+pending[0].attr('id')+' found: '+tmp.attr('id'));
-                  
+                  // [1]
                   tmp.data('revealed', 1);
                   pending.push(tmp);
                   k++;
@@ -299,9 +307,9 @@ Game = {
     $(this).css({'opacity': 1});
     // se o jogo acabou, ou seja, se só tem minas pra ser descoberta então jogador ganhou
     Game.hidden_count--;
-   //console.log('Testing',Game.hidden_count,'==',Game.mine_count);
+   // GAME OVER. Vai revelar MINAS.
     if (Game.hidden_count == Game.mine_count) {
-      console.log('Game won with:', Game.hidden_count, 'remaining blocks!');
+      console.log('Game WON with:', Game.hidden_count, 'remaining blocks!');
       var lin2 = Game.clicked.data('lin'),
           col2 = Game.clicked.data('col');
       var k = Game.mines_elem.length-1;
@@ -310,20 +318,7 @@ Game = {
         // se não for a mina que disparou o click, ou seja, a mina que ele clicou primeiro então mostra.
         if (Game.mines_elem[k].data('lin') != lin2 || Game.mines_elem[k].data('col') != col2) {
           //console.log('Showed mine at:',Game.mines_elem[k].attr('id'));
-          // se era uma flag, tira ela
-          if (Game.mines_elem[k].data('flag') == 1) {
-            Game.mines_elem[k].data('flag', 0);
-            Game.mines_elem[k].find('span').removeClass('game_flag');
-            // atualiza o contador de flags
-            var number = 0;
-            number = parseInt($('#flag_count').html()) - 1;
-            $('#flag_count').html(number);
-            if (number <= Game.mine_count && $('#gflag_label').hasClass('gwrong_flag_count'))
-              $('#gflag_label').removeClass('gwrong_flag_count');
-          }
           Game.mines_elem[k].find('span').addClass('game_mine');
-          // não precisa marcar a mina como já revelada pro usuário não clicar nela denovo porque 
-          // a var Game.over é settada como true, então não vai acontecer mais nada.
         }
         Game.mines_elem[k].data('revealed', 1);
         Game.mines_elem.splice(k, 1);
