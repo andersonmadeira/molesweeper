@@ -198,9 +198,15 @@ Game = {
           console.log('Showed mine at:',Game.mines_elem[k].attr('id'));
           // se era uma flag, tira ela
           if (Game.mines_elem[k].data('flag') == 1) {
-            // --
-            ///Game.mines_elem[k].data('flag', 0);
+            // remove a classe css de flag
             Game.mines_elem[k].find('span').removeClass('game_flag');
+            // vamos diminuir agora o contador de flags
+            var number = 0;
+            number = parseInt($('#flag_count').html()) - 1;
+            $('#flag_count').html(number);
+            if (number <= Game.mine_count && $('#gflag_label').hasClass('gwrong_flag_count'))
+              $('#gflag_label').removeClass('gwrong_flag_count');
+
           }
           Game.mines_elem[k].find('span').addClass('game_mine');
           // não precisa marcar a mina como já revelada pro usuário não clicar nela denovo porque 
